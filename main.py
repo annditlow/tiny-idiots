@@ -7,18 +7,37 @@ class TinyIdiot:
         self.vibes = 10
         self.beans = 0
         self.age = 0
+        self.luck = random.randint(1, 10)
+        self.resilience = random.randint(1, 10)
+        self.greed = random.randint(1, 10)
+        self.drama = random.randint(1, 10)
 
     def live_one_day(self):
         self.age += 1
 
-        if random.random() < 0.5:
-            self.beans += 1
-            self.vibes += 2
-            print(f"{self.name} found a bean. Vibes: {self.vibes}. Beans: {self.beans}.")
-        else:
-            self.vibes -= 3
-            print(f"{self.name} perceived the horrors. Vibes: {self.vibes}.")
+        bean_chance = 0.3 + (self.luck * 0.04)
 
+        if random.random() < bean_chance:
+            beans_found = 1
+
+            if random.random() < (self.greed / 20):
+                beans_found += 1
+
+            self.beans += beans_found
+            self.vibes += 2
+
+            print(f"{self.name} found {beans_found} bean(s). Vibes: {self.vibes}. Beans: {self.beans}.")
+        else:
+            vibe_loss = max(1, 5 - (self.resilience // 2))
+            vibe_loss += self.drama // 5
+            self.vibes -= vibe_loss
+
+            print(f"{self.name} perceived the horrors and lost {vibe_loss} vibes. Vibes: {self.vibes}.")
+        
+        if self.drama >= 8 and random.random() < 0.15:
+            self.vibes -= 2
+            print(f"{self.name} dramatically overreacted to absolutely nothing. Vibes: {self.vibes}.")
+    
     def is_alive(self):
         return self.vibes > 0
 
@@ -46,6 +65,7 @@ print("Tiny Idiots booting...")
 
 for idiot in swamp:
     print(f"{idiot.name} has entered the swamp.")
+    print(f"  Luck: {idiot.luck}, Resilience: {idiot.resilience}, Greed: {idiot.greed}, Drama: {idiot.drama}")
 
 
 for day in range(1, 21):
